@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'sentry_config.dart';
@@ -51,15 +52,14 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+final _channel = MethodChannel('my_plugin');
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   Future<void> _incrementCounter() async {
-    try {
-      throw 'My error';
-    } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
-    }
+    _channel.invokeMethod('push');
+
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
